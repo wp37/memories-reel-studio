@@ -230,6 +230,12 @@ export const MEMORIES_VISUAL_STYLES = [
     desc: 'Hoàng hôn đỏ cam trên cánh đồng, bóng dài, hùng vĩ',
     prompt: 'Visual Style: Epic Sunset Rice Field, rich orange and purple sunset glow casting long shadows, wide panoramic landscape, tiny human figures against vast golden rice paddies, dramatic sky, cinematic composition, warm earth palette. NEGATIVE: modern technology, concrete roads, plastic objects, bright saturated colors, CGI, 3D renders, text, watermarks, logos, anatomy errors, blurry faces.',
   },
+  {
+    id: 'studio_ghibli_rural',
+    name: '🍃 Anime Ghibli (Nhật Bản)',
+    desc: 'Phong cách Studio Ghibli, rực rỡ, nên thơ, anime đồng quê',
+    prompt: 'Visual Style: Studio Ghibli Anime Masterpiece, hand-drawn 2D animation style of Hayao Miyazaki, lush vibrant green landscapes, fluffy white cumulus clouds in bright blue sky, detailed watercolor backgrounds, cell-shaded characters, soft cinematic lighting, magical pastoral atmosphere. NEGATIVE: 3D, CGI, realistic photography, dark gloomy colors, modern technology, text, watermarks.',
+  },
 ];
 
 // ─── HASHTAG COMBOS ───

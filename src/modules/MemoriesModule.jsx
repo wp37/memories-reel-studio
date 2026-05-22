@@ -74,14 +74,13 @@ export default function MemoriesModule({ onScriptGenerated, uiLang = 'vi' }) {
 
   // ─── Paste Handler (for images) ───
   const handlePaste = (e) => {
-    const items = e.clipboardData?.items;
-    if (!items) return;
-    
+    const items = e.clipboardData?.items || [];
+    const files = e.clipboardData?.files || [];
     let hasImage = false;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf('image') !== -1) {
+
+    const processFile = (file) => {
+      if (file && file.type.startsWith('image/')) {
         hasImage = true;
-        const file = items[i].getAsFile();
         const reader = new FileReader();
         reader.onload = (event) => {
           setPastedImages(prev => {
@@ -91,9 +90,23 @@ export default function MemoriesModule({ onScriptGenerated, uiLang = 'vi' }) {
         };
         reader.readAsDataURL(file);
       }
+    };
+
+    // First try files array (from OS file explorer)
+    Array.from(files).forEach(processFile);
+
+    // Fallback to items array (from clipboard screenshot / web copy)
+    if (!hasImage) {
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          processFile(file);
+        }
+      }
     }
     
     if (hasImage) {
+      e.preventDefault(); // Chặn dán tên file/blob vào textarea nếu đã nhận ảnh
       showToast('📸 Đã thêm ảnh tham khảo!', 'success');
     }
   };

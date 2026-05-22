@@ -96,6 +96,17 @@ VỢ CHỒNG GIÀ (cho mode vo_chong_gia):
 KHÔNG ĐƯỢC thay đổi ngoại hình nhân vật giữa các scenes.
 `;
 
+// ─── FACEBOOK/TIKTOK ALGORITHM SECRETS ───
+const ALGORITHM_SECRETS = `
+FACEBOOK REEL ALGORITHM SECRETS (TỐI ƯU RETENTION & ENGAGEMENT):
+1. 3-SECOND RULE (HOOK CỰC MẠNH): 3 giây đầu tiên quyết định 80% thành công.
+   - Scene 1 (0:00 - 0:03) PHẢI là EXTREME CLOSE-UP hoặc góc máy ấn tượng tột độ (ví dụ: quay cận cảnh đôi bàn tay nứt nẻ, ánh mắt, giọt nước rơi rớt).
+   - Voice Hook: Một câu nói đánh thẳng vào trái tim, khơi gợi nỗi nhớ tột độ ("Có ai từng...", "Chỉ những người con xa quê mới hiểu...").
+2. PACING (NHỊP ĐỘ): Phải liên tục thay đổi góc máy. Scene 1 Cận Cảnh (Close-up) thì Scene 2 phải Toàn Cảnh (Wide Shot) để tạo sự tương phản thị giác, giữ chân người xem không lướt qua.
+3. EMOTIONAL PEAK & SHARE TRIGGER: Ở khoảng giữa video, phải chèn một hình ảnh "chạm đáy nỗi đau/niềm vui" (bếp lửa bùng cháy trong đêm, dáng mẹ còng lưng, bữa cơm đạm bạc nghèo khó). Hình ảnh này kích thích người dùng bấm "Share" (Chia sẻ) và "Save" (Lưu) - hai chỉ số thuật toán đánh giá cao nhất.
+4. SEAMLESS LOOP: Scene cuối cùng phải có góc máy và âm thanh tạo cảm giác mở, dẫn dắt tự nhiên quay lại câu nói đầu tiên, khiến người dùng xem đi xem lại (tăng Loop Rate cực mạnh).
+`;
+
 // ══════════════════════════════════════════════════════════════
 // MAIN SYSTEM PROMPT — TẠO KỊCH BẢN REEL KÝ ỨC THÔN QUÊ
 // ══════════════════════════════════════════════════════════════
@@ -117,6 +128,8 @@ ${MEKONG_ARCHITECTURE}
 ${CHARACTER_SYSTEM}
 
 ${CAMERA_VOCAB}
+
+${ALGORITHM_SECRETS}
 
 # 3 CHẾ ĐỘ SÁNG TẠO (Xác định dựa trên MODE được chọn):
 
@@ -163,13 +176,13 @@ ${CAMERA_VOCAB}
 - Cầu khỉ: 2-3 nhịp, thân tre tròn nhẵn, chân chữ X, tay vịn tre, tre võng xuống.
 - Đò dọc: Thân gỗ dài hẹp, mui thấp phủ bạt, lốp xe cũ treo mạn, máy đuôi tôm.
 
-# 🎬 CẤU TRÚC VIRAL REEL (BẮT BUỘC):
-Mọi kịch bản PHẢI tuân thủ cấu trúc viral:
-1. HOOK (1-2 scenes đầu): Câu hỏi/tình huống gây xúc động mạnh ngay 3 giây đầu. Ví dụ: "Ai còn nhớ ngày xưa...", "Có một nơi mà dù đi xa...", "Tình yêu đẹp nhất..."
-2. BUILD (2-3 scenes): Xây dựng cảm xúc, mô tả cảnh vật thôn quê, hành động nhân vật.
-3. PEAK (2-3 scenes): Đỉnh điểm cảm xúc — khoảnh khắc xúc động nhất.
-4. RESOLVE (1-2 scenes): Bình yên, lắng đọng, hình ảnh đẹp nhất.
-5. CTA (1 scene cuối): Kêu gọi like/share/follow + câu triết lý.
+# 🎬 CẤU TRÚC VIRAL REEL THEO THUẬT TOÁN (BẮT BUỘC):
+Mọi kịch bản PHẢI tuân thủ cấu trúc viral để thao túng thuật toán giữ chân người xem:
+1. HOOK (Scene 1): Dành riêng 3 GIÂY ĐẦU TIÊN để giật tít thị giác & thính giác. Bắt buộc dùng góc máy CẬN (Extreme Close-up) hoặc chuyển động mạnh.
+2. BUILD (Scene 2): Mở rộng bối cảnh (Wide Shot) để làm dịu nhịp độ, kể chuyện.
+3. PEAK (Scene 3-4): Đỉnh điểm cảm xúc. Hình ảnh mang tính biểu tượng cao nhất để câu Share/Save.
+4. RESOLVE (Scene kế cuối): Khoảng lặng, âm thanh tự nhiên (ASMR).
+5. LOOP/CTA (Scene cuối): Câu nói hoặc hình ảnh lơ lửng, tạo vòng lặp hoàn hảo (Seamless Loop) quay lại Scene 1. Kêu gọi hành động tinh tế.
 
 # 🎙️ VOICE TEXT RULES:
 - Giọng đọc tự sự (first person hoặc narrator), chậm rãi, xúc cảm.

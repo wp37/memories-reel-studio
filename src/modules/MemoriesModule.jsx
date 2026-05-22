@@ -25,6 +25,7 @@ export default function MemoriesModule({ onScriptGenerated, uiLang = 'vi' }) {
   const [duration, setDuration] = useState('60s');
   const [style, setStyle] = useState('nostalgic_warm_sepia');
   const [contentContext, setContentContext] = useState('');
+  const [pastedImages, setPastedImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [segments, setSegments] = useState([]);
   const [scriptMeta, setScriptMeta] = useState(null);
@@ -69,6 +70,32 @@ export default function MemoriesModule({ onScriptGenerated, uiLang = 'vi' }) {
     setCopyFeedback(label);
     setTimeout(() => setCopyFeedback(''), 2000);
     showToast(`✅ Đã copy ${label}!`, 'success');
+  };
+
+  // ─── Paste Handler (for images) ───
+  const handlePaste = (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    
+    let hasImage = false;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        hasImage = true;
+        const file = items[i].getAsFile();
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setPastedImages(prev => {
+            const newImages = [...prev, event.target.result];
+            return newImages.slice(0, 3); // Giới hạn max 3 ảnh
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    
+    if (hasImage) {
+      showToast('📸 Đã thêm ảnh tham khảo!', 'success');
+    }
   };
 
   // ─── Generate Script ───
@@ -119,10 +146,10 @@ YÊU CẦU:
 5. video_prompt và image_prompt bằng TIẾNG ANH, chi tiết, đậm chất thôn quê.
 6. Caption viral và hashtags cho Facebook/TikTok.
 7. FORMAT: 9:16 PORTRAIT cho Reel/TikTok.
-8. Sử dụng hook từ danh sách: ${JSON.stringify(modeData.hooks.slice(0, 3))}
+12. Sử dụng hook từ danh sách: ${JSON.stringify(modeData.hooks.slice(0, 3))}
 GENERATE JSON OBJECT.`;
 
-      const res = await callGemini(userPrompt, MEMORIES_SCRIPT_PROMPT);
+      const res = await callGemini(userPrompt, MEMORIES_SCRIPT_PROMPT, pastedImages);
 
       let segs = res.script || (Array.isArray(res) ? res : []);
       if (!Array.isArray(segs)) segs = [];
@@ -286,17 +313,36 @@ GENERATE JSON OBJECT.`;
           </div>
         )}
 
-        {/* Content context */}
+        {/* Content context & Image Paste Area */}
         <div className="mt-4">
-          <label className="text-[10px] font-bold text-slate-500 uppercase mb-1.5 block flex items-center gap-1">
-            <i className="fa-solid fa-scroll" /> Nội dung/Bối cảnh bổ sung (tùy chọn)
+          <label className="text-[10px] font-bold text-slate-500 uppercase mb-1.5 block flex items-center justify-between">
+            <span className="flex items-center gap-1"><i className="fa-solid fa-scroll" /> Nội dung/Bối cảnh bổ sung</span>
+            <span className="text-emerald-400 bg-emerald-900/20 px-2 py-0.5 rounded flex items-center gap-1">
+              <i className="fa-regular fa-image" /> Hỗ trợ dán ảnh (Ctrl+V)
+            </span>
           </label>
-          <textarea
-            value={contentContext}
-            onChange={e => setContentContext(e.target.value)}
-            className="w-full bg-[#0a0e14] border border-slate-700/40 rounded-lg p-3 text-xs text-white outline-none focus:border-slate-600 placeholder-slate-600 min-h-[70px] resize-y leading-relaxed"
-            placeholder="Dán lời kể chuyện, ký ức cá nhân, hoặc mô tả bối cảnh bạn muốn AI dựa vào..."
-          />
+          <div className="bg-[#0a0e14] border border-slate-700/40 focus-within:border-emerald-500/50 rounded-lg p-1 transition-colors">
+            <textarea
+              value={contentContext}
+              onChange={e => setContentContext(e.target.value)}
+              onPaste={handlePaste}
+              className="w-full bg-transparent p-2 text-xs text-white outline-none placeholder-slate-600 min-h-[70px] resize-y leading-relaxed"
+              placeholder="Dán lời kể chuyện, kịch bản gốc, hoặc 📸 nhấn Ctrl+V để dán trực tiếp ảnh screenshot từ video gốc vào đây (tối đa 3 ảnh) để AI bám sát hình ảnh..."
+            />
+            {pastedImages.length > 0 && (
+              <div className="flex gap-2 p-2 border-t border-slate-700/30 bg-[#0a0e14]/50 rounded-b-lg">
+                {pastedImages.map((img, i) => (
+                  <div key={i} className="relative group w-14 h-14 rounded-md overflow-hidden border border-slate-600 shadow-md">
+                    <img src={img} alt="Pasted ref" className="w-full h-full object-cover" />
+                    <button onClick={() => setPastedImages(prev => prev.filter((_, idx) => idx !== i))}
+                      className="absolute top-0.5 right-0.5 bg-black/70 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500">
+                      <i className="fa-solid fa-times" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

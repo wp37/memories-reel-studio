@@ -94,10 +94,28 @@ async function withKeyRetry(apiCall) {
 }
 
 // ─── Single Gemini API call (one model, one key) ───
-async function callGeminiOnce(key, model, userPrompt, systemPrompt) {
+async function callGeminiOnce(key, model, userPrompt, systemPrompt, images = []) {
+  const parts = [{ text: userPrompt }];
+  
+  // Add image parts if provided
+  if (images && images.length > 0) {
+    images.forEach(img => {
+      // Expecting img format: "data:image/jpeg;base64,/9j/4AAQ..."
+      const match = img.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
+      if (match) {
+        parts.push({
+          inlineData: {
+            mimeType: match[1],
+            data: match[2]
+          }
+        });
+      }
+    });
+  }
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
   const body = {
-    contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+    contents: [{ role: 'user', parts }],
     systemInstruction: { parts: [{ text: systemPrompt }] },
     generationConfig: {
       temperature: 0.85,
@@ -137,12 +155,12 @@ async function callGeminiOnce(key, model, userPrompt, systemPrompt) {
 }
 
 // ─── Gemini AI Text Generation (with model fallback chain) ───
-export async function callGemini(userPrompt, systemPrompt) {
+export async function callGemini(userPrompt, systemPrompt, images = []) {
   return withKeyRetry(async (key) => {
     let lastError;
     for (const model of GEMINI_MODELS) {
       try {
-        return await callGeminiOnce(key, model, userPrompt, systemPrompt);
+        return await callGeminiOnce(key, model, userPrompt, systemPrompt, images);
       } catch (e) {
         lastError = e;
         const errorType = e._errorType || classifyError(e.message, e._httpStatus);
